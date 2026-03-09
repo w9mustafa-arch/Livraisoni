@@ -14,6 +14,10 @@ import {
 } from 'lucide-react';
 import { useState, useEffect } from 'react';
 
+            import React, { useState, useEffect } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { PawPrint, Menu, X } from 'lucide-react';
+
 const Navigation = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [activeSection, setActiveSection] = useState('home');
@@ -46,7 +50,10 @@ const Navigation = () => {
   ];
 
   return (
-    <nav className="bg-background/80 border-border/40 relative sticky top-0 z-50 flex w-full items-center justify-between border-b px-6 py-6 shadow-sm backdrop-blur-lg md:px-12">
+    <nav 
+      style={{ backgroundColor: '#ffffff' }} 
+      className="sticky top-0 z-50 flex w-full items-center justify-between border-b border-border/40 px-6 py-6 shadow-sm backdrop-blur-lg md:px-12"
+    >
       <a
         href="/"
         className="text-primary flex items-center gap-3 transition-opacity hover:opacity-80"
@@ -110,7 +117,8 @@ const Navigation = () => {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -20 }}
             transition={{ duration: 0.3, ease: 'easeOut' }}
-            className="bg-card border-border/60 absolute top-full right-4 left-4 z-50 mt-2 flex w-[calc(100%-2rem)] flex-col gap-6 rounded-2xl border p-8 shadow-2xl md:hidden"
+            style={{ backgroundColor: '#ffffff' }}
+            className="border-border/60 absolute top-full right-4 left-4 z-50 mt-2 flex w-[calc(100%-2rem)] flex-col gap-6 rounded-2xl border p-8 shadow-2xl md:hidden"
           >
             {navLinks.map((link, idx) => (
               <motion.a
@@ -170,6 +178,9 @@ const Navigation = () => {
     </nav>
   );
 };
+
+export default Navigation;
+
 
 const Hero = () => {
   return (
