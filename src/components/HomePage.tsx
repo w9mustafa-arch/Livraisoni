@@ -18,12 +18,15 @@ import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { PawPrint, Menu, X } from 'lucide-react';
 
+
 const Navigation = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [activeSection, setActiveSection] = useState('home');
+  const [isScrolled, setIsScrolled] = useState(false);
 
   useEffect(() => {
     const handleScroll = () => {
+      // تحديد القسم النشط
       const sections = ['home', 'features', 'community', 'wisdom', 'cta'];
       let current = 'home';
 
@@ -31,17 +34,34 @@ const Navigation = () => {
         const element = document.getElementById(section);
         if (element) {
           const rect = element.getBoundingClientRect();
-          if (rect.top <= 100) {
+          if (rect.top <= 150 && rect.bottom >= 100) {
             current = section;
+            break;
           }
         }
       }
       setActiveSection(current);
+      
+      // تحديد إذا كان المستخدم مرر للأسفل (لتغيير شفافية الخلفية)
+      setIsScrolled(window.scrollY > 50);
     };
 
     window.addEventListener('scroll', handleScroll);
+    handleScroll(); // استدعاء أولي لتحديد القسم النشط
+    
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
+
+  const scrollToSection = (e, sectionId) => {
+    e.preventDefault();
+    const element = document.getElementById(sectionId);
+    if (element) {
+      const yOffset = -80; // تعويض ارتفاع الـ navigation
+      const y = element.getBoundingClientRect().top + window.pageYOffset + yOffset;
+      window.scrollTo({ top: y, behavior: 'smooth' });
+      setIsOpen(false); // إغلاق القائمة على الموبايل بعد النقر
+    }
+  };
 
   const navLinks = [
     { href: '#features', label: 'Philosophy', id: 'features' },
@@ -50,132 +70,188 @@ const Navigation = () => {
   ];
 
   return (
-    <nav 
-      style={{ backgroundColor: '#ffffff' }} 
-      className="sticky top-0 z-50 flex w-full items-center justify-between border-b border-border/40 px-6 py-6 shadow-sm backdrop-blur-lg md:px-12"
+    <motion.nav 
+      initial={{ y: -100 }}
+      animate={{ y: 0 }}
+      transition={{ duration: 0.6, ease: "easeOut" }}
+      className={`fixed top-0 z-50 w-full transition-all duration-300 ${
+        isScrolled 
+          ? 'bg-white/95 backdrop-blur-md shadow-md py-4' 
+          : 'bg-white py-6'
+      }`}
     >
-      <a
-        href="/"
-        className="text-primary flex items-center gap-3 transition-opacity hover:opacity-80"
-      >
-        <PawPrint className="h-8 w-8" />
-        <span className="font-heading text-foreground text-2xl font-bold">
-          Purrfectly Zen
-        </span>
-      </a>
+      <div className="mx-auto flex max-w-7xl items-center justify-between px-6 md:px-12">
+        {/* Logo with Image */}
+        <a
+          href="/"
+          className="group flex items-center gap-3 transition-all duration-300 hover:opacity-90"
+          onClick={(e) => scrollToSection(e, 'home')}
+        >
+          <div className="relative h-10 w-10 overflow-hidden rounded-full shadow-md transition-transform duration-300 group-hover:scale-110">
+            <img 
+              src="/api/placeholder/40/40" 
+              alt="Purrfectly Zen Logo" 
+              className="h-full w-full object-cover"
+              onError={(e) => {
+                // في حال فشل تحميل الصورة، استبدالها بالأيقونة الافتراضية
+                e.target.style.display = 'none';
+                e.target.parentElement.innerHTML = '<svg class="w-10 h-10 text-primary" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 3c1.66 0 3 1.34 3 3s-1.34 3-3 3-3-1.34-3-3 1.34-3 3-3zm0 14.2c-2.5 0-4.71-1.28-6-3.22.03-1.99 4-3.08 6-3.08 1.99 0 5.97 1.09 6 3.08-1.29 1.94-3.5 3.22-6 3.22z"/></svg>';
+              }}
+            />
+          </div>
+          <span className="font-heading text-gray-800 text-xl font-bold transition-colors duration-300 group-hover:text-primary md:text-2xl">
+            Purrfectly Zen
+          </span>
+        </a>
 
-      {/* Desktop Nav */}
-      <div className="hidden items-center gap-8 font-medium md:flex">
-        {navLinks.map((link) => (
-          <a
-            key={link.id}
-            href={link.href}
-            data-testid={`link-${link.id}`}
-            className={`relative w-fit transition-colors ${
-              activeSection === link.id
-                ? 'text-primary font-bold'
-                : 'text-muted-foreground hover:text-primary'
-            }`}
-          >
-            <motion.div whileHover={{ scale: 1.05 }}>
-              {link.label}
+        {/* Desktop Navigation */}
+        <div className="hidden items-center gap-1 md:flex">
+          {navLinks.map((link) => (
+            <a
+              key={link.id}
+              href={link.href}
+              onClick={(e) => scrollToSection(e, link.id)}
+              className={`group relative px-4 py-2 text-sm font-medium transition-all duration-300 lg:text-base ${
+                activeSection === link.id
+                  ? 'text-primary'
+                  : 'text-gray-600 hover:text-primary'
+              }`}
+            >
+              <span className="relative z-10">{link.label}</span>
+              
+              {/* Hover Effect */}
+              <motion.span
+                className="absolute inset-0 z-0 rounded-lg bg-primary/5"
+                initial={false}
+                whileHover={{ scale: 1 }}
+                transition={{ type: "spring", stiffness: 400, damping: 30 }}
+              />
+              
+              {/* Active Indicator */}
               {activeSection === link.id && (
-                <motion.div
+                <motion.span
                   layoutId="activeIndicator"
-                  className="bg-primary absolute right-0 bottom-0 left-0 h-1 rounded-full"
+                  className="absolute -bottom-1 left-2 right-2 h-0.5 rounded-full bg-primary"
                   transition={{ type: 'spring', stiffness: 380, damping: 30 }}
                 />
               )}
-            </motion.div>
-          </a>
-        ))}
-        <a href="/join">
-          <button
-            data-testid="button-join-nav"
-            className="font-heading bg-primary text-primary-foreground hover:bg-primary/90 rounded-full px-6 py-2 font-bold shadow-lg transition-all hover:scale-105 hover:shadow-xl"
-          >
-            Join the Clowder
-          </button>
-        </a>
-      </div>
-
-      {/* Mobile Nav Toggle */}
-      <button
-        className="text-foreground bg-primary/10 hover:bg-primary/25 rounded-full p-2 transition-colors md:hidden"
-        onClick={() => setIsOpen(!isOpen)}
-        data-testid="button-menu-toggle"
-      >
-        {isOpen ? <X /> : <Menu />}
-      </button>
-
-      {/* Mobile Nav Menu */}
-      <AnimatePresence mode="wait">
-        {isOpen && (
-          <motion.div
-            key="mobile-menu"
-            initial={{ opacity: 0, y: -20 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -20 }}
-            transition={{ duration: 0.3, ease: 'easeOut' }}
-            style={{ backgroundColor: '#ffffff' }}
-            className="border-border/60 absolute top-full right-4 left-4 z-50 mt-2 flex w-[calc(100%-2rem)] flex-col gap-6 rounded-2xl border p-8 shadow-2xl md:hidden"
-          >
-            {navLinks.map((link, idx) => (
-              <motion.a
-                key={link.id}
-                href={link.href}
-                onClick={() => setIsOpen(false)}
-                data-testid={`link-${link.id}-mobile`}
-                initial={{ opacity: 0, x: -20 }}
-                animate={{ opacity: 1, x: 0 }}
-                exit={{ opacity: 0, x: -20 }}
-                transition={{
-                  delay: idx * 0.08,
-                  duration: 0.25,
-                  ease: 'easeOut',
-                }}
-                whileHover={{ x: 4 }}
-                className={`w-fit text-center text-lg font-medium transition-colors duration-300 ${
-                  activeSection === link.id
-                    ? 'text-primary font-bold'
-                    : 'text-foreground hover:text-primary'
-                }`}
-              >
-                {link.label}
-              </motion.a>
-            ))}
-            <motion.div
-              className="border-border/40 border-t pt-6"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              transition={{
-                delay: navLinks.length * 0.08 + 0.1,
-                duration: 0.25,
-              }}
+            </a>
+          ))}
+          
+          <a href="/join" className="ml-4">
+            <motion.button
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              className="group relative overflow-hidden rounded-full bg-primary px-6 py-2.5 text-sm font-bold text-white shadow-lg transition-all duration-300 hover:shadow-xl lg:text-base"
             >
-              <a
-                href="/join"
-                className="block w-full"
+              <span className="relative z-10">Join the Clowder</span>
+              <motion.span
+                className="absolute inset-0 bg-primary-600"
+                initial={{ x: "100%" }}
+                whileHover={{ x: 0 }}
+                transition={{ duration: 0.3 }}
+              />
+            </motion.button>
+          </a>
+        </div>
+
+        {/* Mobile Menu Button */}
+        <motion.button
+          whileTap={{ scale: 0.9 }}
+          className="relative z-50 rounded-lg bg-primary/10 p-2.5 text-primary transition-colors hover:bg-primary/20 md:hidden"
+          onClick={() => setIsOpen(!isOpen)}
+          aria-label="Toggle menu"
+        >
+          {isOpen ? <X size={24} /> : <Menu size={24} />}
+        </motion.button>
+
+        {/* Mobile Navigation Menu */}
+        <AnimatePresence>
+          {isOpen && (
+            <>
+              {/* Backdrop */}
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.3 }}
+                className="fixed inset-0 z-40 bg-black/20 backdrop-blur-sm md:hidden"
                 onClick={() => setIsOpen(false)}
+              />
+              
+              {/* Menu Panel */}
+              <motion.div
+                initial={{ x: "100%" }}
+                animate={{ x: 0 }}
+                exit={{ x: "100%" }}
+                transition={{ type: "spring", damping: 25, stiffness: 200 }}
+                className="fixed top-0 right-0 z-50 h-full w-72 bg-white shadow-2xl md:hidden"
               >
-                <motion.div
-                  whileHover={{ scale: 1.02 }}
-                  whileTap={{ scale: 0.98 }}
-                >
-                  <button
-                    data-testid="button-join-mobile"
-                    className="font-heading bg-primary text-primary-foreground hover:bg-primary/90 w-full rounded-full py-4 font-medium shadow-lg transition-all hover:shadow-xl"
-                  >
-                    Join the Clowder
-                  </button>
-                </motion.div>
-              </a>
-            </motion.div>
-          </motion.div>
-        )}
-      </AnimatePresence>
-    </nav>
+                <div className="flex h-full flex-col">
+                  {/* Mobile Menu Header */}
+                  <div className="border-b border-gray-100 p-6">
+                    <div className="flex items-center gap-3">
+                      <div className="h-10 w-10 overflow-hidden rounded-full">
+                        <img 
+                          src="/api/placeholder/40/40" 
+                          alt="Logo" 
+                          className="h-full w-full object-cover"
+                          onError={(e) => {
+                            e.target.style.display = 'none';
+                            e.target.parentElement.innerHTML = '<svg class="w-10 h-10 text-primary" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 3c1.66 0 3 1.34 3 3s-1.34 3-3 3-3-1.34-3-3 1.34-3 3-3zm0 14.2c-2.5 0-4.71-1.28-6-3.22.03-1.99 4-3.08 6-3.08 1.99 0 5.97 1.09 6 3.08-1.29 1.94-3.5 3.22-6 3.22z"/></svg>';
+                          }}
+                        />
+                      </div>
+                      <span className="font-heading text-gray-800 text-lg font-bold">
+                        Menu
+                      </span>
+                    </div>
+                  </div>
+
+                  {/* Mobile Menu Links */}
+                  <div className="flex-1 overflow-y-auto p-4">
+                    <div className="space-y-2">
+                      {navLinks.map((link, idx) => (
+                        <motion.a
+                          key={link.id}
+                          href={link.href}
+                          onClick={(e) => {
+                            scrollToSection(e, link.id);
+                            setIsOpen(false);
+                          }}
+                          initial={{ opacity: 0, x: -20 }}
+                          animate={{ opacity: 1, x: 0 }}
+                          transition={{ delay: idx * 0.1 }}
+                          className={`flex w-full items-center rounded-xl px-4 py-3 text-base font-medium transition-all duration-300 ${
+                            activeSection === link.id
+                              ? 'bg-primary/10 text-primary'
+                              : 'text-gray-600 hover:bg-gray-50 hover:text-primary'
+                          }`}
+                        >
+                          {link.label}
+                        </motion.a>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Mobile Menu Footer */}
+                  <div className="border-t border-gray-100 p-6">
+                    <a href="/join" onClick={() => setIsOpen(false)}>
+                      <motion.button
+                        whileTap={{ scale: 0.98 }}
+                        className="w-full rounded-xl bg-primary px-6 py-4 font-bold text-white shadow-lg transition-all hover:bg-primary/90"
+                      >
+                        Join the Clowder
+                      </motion.button>
+                    </a>
+                  </div>
+                </div>
+              </motion.div>
+            </>
+          )}
+        </AnimatePresence>
+      </div>
+    </motion.nav>
   );
 };
 
