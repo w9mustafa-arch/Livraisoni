@@ -1,4 +1,3 @@
-import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
   Heart,
@@ -13,48 +12,33 @@ import {
   Lock,
   CheckCircle,
 } from 'lucide-react';
+import { useState, useEffect } from 'react';
 
-// Navigation Component
 const Navigation = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [activeSection, setActiveSection] = useState('home');
-  const [isScrolled, setIsScrolled] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
 
+  // مراقبة التمرير لتغيير شكل الـ Nav
   useEffect(() => {
     const handleScroll = () => {
+      // تغيير الخلفية عند التمرير
+      setScrolled(window.scrollY > 20);
+
       const sections = ['home', 'features', 'community', 'wisdom', 'cta'];
       let current = 'home';
-
       for (const section of sections) {
         const element = document.getElementById(section);
-        if (element) {
-          const rect = element.getBoundingClientRect();
-          if (rect.top <= 150 && rect.bottom >= 100) {
-            current = section;
-            break;
-          }
+        if (element && element.getBoundingClientRect().top <= 100) {
+          current = section;
         }
       }
       setActiveSection(current);
-      setIsScrolled(window.scrollY > 50);
     };
 
     window.addEventListener('scroll', handleScroll);
-    handleScroll();
-    
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
-
-  const scrollToSection = (e, sectionId) => {
-    e.preventDefault();
-    const element = document.getElementById(sectionId);
-    if (element) {
-      const yOffset = -80;
-      const y = element.getBoundingClientRect().top + window.pageYOffset + yOffset;
-      window.scrollTo({ top: y, behavior: 'smooth' });
-      setIsOpen(false);
-    }
-  };
 
   const navLinks = [
     { href: '#features', label: 'Philosophy', id: 'features' },
@@ -63,176 +47,110 @@ const Navigation = () => {
   ];
 
   return (
-    <motion.nav 
-      initial={{ y: -100 }}
-      animate={{ y: 0 }}
-      transition={{ duration: 0.6, ease: "easeOut" }}
-      className={`fixed top-0 z-50 w-full transition-all duration-300 ${
-        isScrolled 
-          ? 'bg-white/95 backdrop-blur-md shadow-md py-4' 
-          : 'bg-white py-6'
+    <nav 
+      className={`fixed top-0 z-50 w-full transition-all duration-300 px-6 py-4 md:px-12 ${
+        scrolled 
+        ? 'bg-background/70 backdrop-blur-xl border-b border-border/40 py-3 shadow-lg' 
+        : 'bg-transparent py-6'
       }`}
     >
-      <div className="mx-auto flex max-w-7xl items-center justify-between px-6 md:px-12">
-        <a
-          href="/"
-          className="group flex items-center gap-3 transition-all duration-300 hover:opacity-90"
-          onClick={(e) => scrollToSection(e, 'home')}
-        >
-          <div className="relative h-10 w-10 overflow-hidden rounded-full shadow-md transition-transform duration-300 group-hover:scale-110">
-            <img 
-              src="https://placekitten.com/40/40" 
-              alt="Purrfectly Zen Logo" 
-              className="h-full w-full object-cover"
-            />
-          </div>
-          <span className="font-heading text-gray-800 text-xl font-bold transition-colors duration-300 group-hover:text-primary md:text-2xl">
-            Purrfectly Zen
+      <div className="max-w-7xl mx-auto flex items-center justify-between">
+        {/* Logo */}
+        <a href="/" className="group flex items-center gap-3">
+          <motion.div 
+            whileHover={{ rotate: [-10, 10, -10, 0] }}
+            className="bg-primary p-2 rounded-xl text-primary-foreground"
+          >
+            <PawPrint className="h-6 w-6" />
+          </motion.div>
+          <span className="font-heading text-foreground text-2xl font-bold tracking-tight">
+            Purrfectly <span className="text-primary">Zen</span>
           </span>
         </a>
 
-        <div className="hidden items-center gap-1 md:flex">
-          {navLinks.map((link) => (
-            <a
-              key={link.id}
-              href={link.href}
-              onClick={(e) => scrollToSection(e, link.id)}
-              className={`group relative px-4 py-2 text-sm font-medium transition-all duration-300 lg:text-base ${
-                activeSection === link.id
-                  ? 'text-primary'
-                  : 'text-gray-600 hover:text-primary'
-              }`}
-            >
-              <span className="relative z-10">{link.label}</span>
-              <motion.span
-                className="absolute inset-0 z-0 rounded-lg bg-primary/5"
-                initial={false}
-                whileHover={{ scale: 1 }}
-                transition={{ type: "spring", stiffness: 400, damping: 30 }}
-              />
-              {activeSection === link.id && (
-                <motion.span
-                  layoutId="activeIndicator"
-                  className="absolute -bottom-1 left-2 right-2 h-0.5 rounded-full bg-primary"
-                  transition={{ type: 'spring', stiffness: 380, damping: 30 }}
-                />
-              )}
-            </a>
-          ))}
-          
-          <a href="/join" className="ml-4">
-            <motion.button
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              className="group relative overflow-hidden rounded-full bg-primary px-6 py-2.5 text-sm font-bold text-white shadow-lg transition-all duration-300 hover:shadow-xl lg:text-base"
-            >
-              <span className="relative z-10">Join the Clowder</span>
-              <motion.span
-                className="absolute inset-0 bg-primary-600"
-                initial={{ x: "100%" }}
-                whileHover={{ x: 0 }}
-                transition={{ duration: 0.3 }}
-              />
-            </motion.button>
-          </a>
+        {/* Desktop Nav */}
+        <div className="hidden items-center gap-10 md:flex">
+          <div className="flex items-center gap-8">
+            {navLinks.map((link) => (
+              <a
+                key={link.id}
+                href={link.href}
+                className={`relative py-2 text-sm font-semibold transition-colors ${
+                  activeSection === link.id ? 'text-primary' : 'text-muted-foreground hover:text-primary'
+                }`}
+              >
+                {link.label}
+                {activeSection === link.id && (
+                  <motion.div
+                    layoutId="nav-underline"
+                    className="absolute bottom-0 left-0 h-0.5 w-full bg-primary"
+                    transition={{ type: 'spring', stiffness: 380, damping: 30 }}
+                  />
+                )}
+              </a>
+            ))}
+          </div>
+
+          <motion.a 
+            href="/join"
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+          >
+            <button className="bg-primary text-primary-foreground px-8 py-2.5 rounded-full font-bold shadow-md hover:shadow-primary/20 hover:shadow-2xl transition-all">
+              Join Clowder
+            </button>
+          </motion.a>
         </div>
 
-        <motion.button
-          whileTap={{ scale: 0.9 }}
-          className="relative z-50 rounded-lg bg-primary/10 p-2.5 text-primary transition-colors hover:bg-primary/20 md:hidden"
+        {/* Mobile Toggle */}
+        <button 
+          className="md:hidden p-2 text-foreground"
           onClick={() => setIsOpen(!isOpen)}
-          aria-label="Toggle menu"
         >
-          {isOpen ? <X size={24} /> : <Menu size={24} />}
-        </motion.button>
-
-        <AnimatePresence>
-          {isOpen && (
-            <>
-              <motion.div
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
-                transition={{ duration: 0.3 }}
-                className="fixed inset-0 z-40 bg-black/20 backdrop-blur-sm md:hidden"
-                onClick={() => setIsOpen(false)}
-              />
-              
-              <motion.div
-                initial={{ x: "100%" }}
-                animate={{ x: 0 }}
-                exit={{ x: "100%" }}
-                transition={{ type: "spring", damping: 25, stiffness: 200 }}
-                className="fixed top-0 right-0 z-50 h-full w-72 bg-white shadow-2xl md:hidden"
-              >
-                <div className="flex h-full flex-col">
-                  <div className="border-b border-gray-100 p-6">
-                    <div className="flex items-center gap-3">
-                      <div className="h-10 w-10 overflow-hidden rounded-full">
-                        <img 
-                          src="https://placekitten.com/40/40" 
-                          alt="Logo" 
-                          className="h-full w-full object-cover"
-                        />
-                      </div>
-                      <span className="font-heading text-gray-800 text-lg font-bold">
-                        Menu
-                      </span>
-                    </div>
-                  </div>
-
-                  <div className="flex-1 overflow-y-auto p-4">
-                    <div className="space-y-2">
-                      {navLinks.map((link, idx) => (
-                        <motion.a
-                          key={link.id}
-                          href={link.href}
-                          onClick={(e) => {
-                            scrollToSection(e, link.id);
-                            setIsOpen(false);
-                          }}
-                          initial={{ opacity: 0, x: -20 }}
-                          animate={{ opacity: 1, x: 0 }}
-                          transition={{ delay: idx * 0.1 }}
-                          className={`flex w-full items-center rounded-xl px-4 py-3 text-base font-medium transition-all duration-300 ${
-                            activeSection === link.id
-                              ? 'bg-primary/10 text-primary'
-                              : 'text-gray-600 hover:bg-gray-50 hover:text-primary'
-                          }`}
-                        >
-                          {link.label}
-                        </motion.a>
-                      ))}
-                    </div>
-                  </div>
-
-                  <div className="border-t border-gray-100 p-6">
-                    <a href="/join" onClick={() => setIsOpen(false)}>
-                      <motion.button
-                        whileTap={{ scale: 0.98 }}
-                        className="w-full rounded-xl bg-primary px-6 py-4 font-bold text-white shadow-lg transition-all hover:bg-primary/90"
-                      >
-                        Join the Clowder
-                      </motion.button>
-                    </a>
-                  </div>
-                </div>
-              </motion.div>
-            </>
-          )}
-        </AnimatePresence>
+          {isOpen ? <X /> : <Menu />}
+        </button>
       </div>
-    </motion.nav>
+
+      {/* Mobile Menu (Improved) */}
+      <AnimatePresence>
+        {isOpen && (
+          <motion.div
+            initial={{ opacity: 0, height: 0 }}
+            animate={{ opacity: 1, height: 'auto' }}
+            exit={{ opacity: 0, height: 0 }}
+            className="md:hidden bg-background/95 backdrop-blur-2xl overflow-hidden border-b border-border/40"
+          >
+            <div className="flex flex-col gap-4 p-8">
+              {navLinks.map((link) => (
+                <a 
+                  key={link.id} 
+                  href={link.href} 
+                  onClick={() => setIsOpen(false)}
+                  className="text-xl font-bold text-foreground hover:text-primary transition-colors"
+                >
+                  {link.label}
+                </a>
+              ))}
+              <hr className="border-border/40" />
+              <a href="/join" className="w-full bg-primary text-primary-foreground text-center py-4 rounded-2xl font-bold">
+                Join Now
+              </a>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </nav>
   );
 };
 
-// Hero Component
+
 const Hero = () => {
   return (
     <section
       id="home"
       className="relative flex min-h-[90vh] flex-col items-center overflow-hidden px-6 py-12 md:flex-row md:px-12 lg:px-24"
     >
+      {/* Decorative Blobs */}
       <div className="bg-primary/10 absolute top-[-10%] left-[-10%] -z-10 h-[500px] w-[500px] rounded-full blur-3xl" />
       <div className="bg-accent/30 absolute right-[-5%] bottom-[10%] -z-10 h-[400px] w-[400px] rounded-full blur-3xl" />
 
@@ -270,6 +188,7 @@ const Hero = () => {
             what matters: peace, presence, and gentle purrs.
           </p>
 
+          {/* Trust Badges */}
           <motion.div
             className="flex flex-wrap gap-4 pt-4"
             initial={{ opacity: 0 }}
@@ -313,11 +232,12 @@ const Hero = () => {
           className="relative z-10"
         >
           <img
-            src="https://placekitten.com/600/600"
+            src="/images/cute_fluffy_cat_sleeping_on_a_cloud.png"
             alt="Sleeping zen cat on a cloud"
             className="h-auto w-full transform rounded-[3rem] shadow-2xl transition-transform duration-700 hover:rotate-0 md:rotate-3"
           />
 
+          {/* Floating Cards */}
           <motion.div
             animate={{ y: [0, -10, 0] }}
             transition={{ repeat: Infinity, duration: 4, ease: 'easeInOut' }}
@@ -332,6 +252,7 @@ const Hero = () => {
             </div>
           </motion.div>
 
+          {/* Second Badge */}
           <motion.div
             animate={{ y: [0, 10, 0] }}
             transition={{
@@ -356,7 +277,6 @@ const Hero = () => {
   );
 };
 
-// FeatureCard Component
 const FeatureCard = ({
   title,
   desc,
@@ -399,7 +319,6 @@ const FeatureCard = ({
   </motion.div>
 );
 
-// Features Component
 const Features = () => {
   return (
     <section
@@ -420,21 +339,21 @@ const Features = () => {
           <FeatureCard
             title="Master of Chill"
             desc="Learn the ancient art of doing absolutely nothing and looking fabulous while doing it."
-            img="https://placekitten.com/300/200"
+            img="/images/meditating_cat_illustration.png"
             delay={0.1}
             testId="card-feature-chill"
           />
           <FeatureCard
             title="Playful Spirit"
             desc="Rediscover your inner kitten. Chase dreams (and butterflies) with reckless abandon."
-            img="https://placekitten.com/301/200"
+            img="/images/playful_cat_illustration.png"
             delay={0.2}
             testId="card-feature-playful"
           />
           <FeatureCard
             title="Soul Nourishment"
             desc="Feed your heart with unconditional love, head bumps, and the occasional slow blink."
-            img="https://placekitten.com/302/200"
+            img="/images/cat_with_food_illustration.png"
             delay={0.3}
             testId="card-feature-nourishment"
           />
@@ -444,7 +363,6 @@ const Features = () => {
   );
 };
 
-// Community Component
 const Community = () => {
   const testimonials = [
     {
@@ -452,21 +370,21 @@ const Community = () => {
       role: 'Meditation Teacher',
       quote:
         'Purrfectly Zen completely transformed how I view mindfulness. My cat approves too.',
-      image: 'https://randomuser.me/api/portraits/women/44.jpg',
+      image: '/images/sarah_chen_meditation_teacher_portrait.png',
     },
     {
       name: 'Marcus Johnson',
       role: 'Wellness Coach',
       quote:
         'The cat philosophy here resonates deeply. Simplicity, presence, and the power of a good nap.',
-      image: 'https://randomuser.me/api/portraits/men/46.jpg',
+      image: '/images/marcus_johnson_wellness_coach_portrait.png',
     },
     {
       name: 'Elena Rodriguez',
       role: 'Creative Director',
       quote:
         "I've never felt more zen. The community here truly understands the meow of life.",
-      image: 'https://randomuser.me/api/portraits/women/68.jpg',
+      image: '/images/elena_rodriguez_creative_director_portrait.png',
     },
   ];
 
@@ -521,7 +439,6 @@ const Community = () => {
   );
 };
 
-// QuoteSection Component
 const QuoteSection = () => {
   return (
     <section
@@ -551,12 +468,12 @@ const QuoteSection = () => {
   );
 };
 
-// Footer Component
-const Footer = () => {
+export const Footer = () => {
   return (
     <footer className="from-secondary/5 via-background to-primary/5 border-border/40 relative border-t bg-gradient-to-br px-6 py-16">
       <div className="mx-auto max-w-7xl">
         <div className="grid grid-cols-1 gap-12 md:grid-cols-3 md:gap-8 lg:gap-12">
+          {/* Left Column: Brand */}
           <motion.div
             initial={{ opacity: 0, x: -20 }}
             whileInView={{ opacity: 1, x: 0 }}
@@ -576,6 +493,7 @@ const Footer = () => {
             </p>
           </motion.div>
 
+          {/* Center Column: Links by Category */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -583,6 +501,7 @@ const Footer = () => {
             transition={{ duration: 0.5, delay: 0.1 }}
             className="space-y-6"
           >
+            {/* Learn */}
             <div className="space-y-3">
               <div className="text-primary flex items-center gap-2">
                 <BookOpen className="h-5 w-5" />
@@ -606,6 +525,7 @@ const Footer = () => {
               </div>
             </div>
 
+            {/* Community */}
             <div className="space-y-3">
               <div className="text-primary flex items-center gap-2">
                 <Users className="h-5 w-5" />
@@ -631,6 +551,7 @@ const Footer = () => {
               </div>
             </div>
 
+            {/* Legal */}
             <div className="space-y-3">
               <div className="text-primary flex items-center gap-2">
                 <Lock className="h-5 w-5" />
@@ -648,6 +569,7 @@ const Footer = () => {
             </div>
           </motion.div>
 
+          {/* Right Column: CTA */}
           <motion.div
             initial={{ opacity: 0, x: 20 }}
             whileInView={{ opacity: 1, x: 0 }}
@@ -677,8 +599,10 @@ const Footer = () => {
           </motion.div>
         </div>
 
+        {/* Divider */}
         <div className="border-border/40 my-8 border-t" />
 
+        {/* Bottom: Copyright */}
         <motion.div
           initial={{ opacity: 0 }}
           whileInView={{ opacity: 1 }}
@@ -698,8 +622,7 @@ const Footer = () => {
   );
 };
 
-// Main Home Component
-const Home = () => {
+export default function Home() {
   return (
     <div className="bg-background selection:bg-primary/20 selection:text-primary-foreground min-h-screen">
       <Navigation />
@@ -788,6 +711,4 @@ const Home = () => {
       <Footer />
     </div>
   );
-};
-
-export default Home;
+}
