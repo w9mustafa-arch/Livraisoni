@@ -1,3 +1,4 @@
+import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
   Heart,
@@ -12,13 +13,8 @@ import {
   Lock,
   CheckCircle,
 } from 'lucide-react';
-import { useState, useEffect } from 'react';
 
-            import React, { useState, useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { PawPrint, Menu, X } from 'lucide-react';
-
-
+// Navigation Component
 const Navigation = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [activeSection, setActiveSection] = useState('home');
@@ -26,7 +22,6 @@ const Navigation = () => {
 
   useEffect(() => {
     const handleScroll = () => {
-      // تحديد القسم النشط
       const sections = ['home', 'features', 'community', 'wisdom', 'cta'];
       let current = 'home';
 
@@ -41,13 +36,11 @@ const Navigation = () => {
         }
       }
       setActiveSection(current);
-      
-      // تحديد إذا كان المستخدم مرر للأسفل (لتغيير شفافية الخلفية)
       setIsScrolled(window.scrollY > 50);
     };
 
     window.addEventListener('scroll', handleScroll);
-    handleScroll(); // استدعاء أولي لتحديد القسم النشط
+    handleScroll();
     
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
@@ -56,10 +49,10 @@ const Navigation = () => {
     e.preventDefault();
     const element = document.getElementById(sectionId);
     if (element) {
-      const yOffset = -80; // تعويض ارتفاع الـ navigation
+      const yOffset = -80;
       const y = element.getBoundingClientRect().top + window.pageYOffset + yOffset;
       window.scrollTo({ top: y, behavior: 'smooth' });
-      setIsOpen(false); // إغلاق القائمة على الموبايل بعد النقر
+      setIsOpen(false);
     }
   };
 
@@ -81,7 +74,6 @@ const Navigation = () => {
       }`}
     >
       <div className="mx-auto flex max-w-7xl items-center justify-between px-6 md:px-12">
-        {/* Logo with Image */}
         <a
           href="/"
           className="group flex items-center gap-3 transition-all duration-300 hover:opacity-90"
@@ -89,14 +81,9 @@ const Navigation = () => {
         >
           <div className="relative h-10 w-10 overflow-hidden rounded-full shadow-md transition-transform duration-300 group-hover:scale-110">
             <img 
-              src="/api/placeholder/40/40" 
+              src="https://placekitten.com/40/40" 
               alt="Purrfectly Zen Logo" 
               className="h-full w-full object-cover"
-              onError={(e) => {
-                // في حال فشل تحميل الصورة، استبدالها بالأيقونة الافتراضية
-                e.target.style.display = 'none';
-                e.target.parentElement.innerHTML = '<svg class="w-10 h-10 text-primary" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 3c1.66 0 3 1.34 3 3s-1.34 3-3 3-3-1.34-3-3 1.34-3 3-3zm0 14.2c-2.5 0-4.71-1.28-6-3.22.03-1.99 4-3.08 6-3.08 1.99 0 5.97 1.09 6 3.08-1.29 1.94-3.5 3.22-6 3.22z"/></svg>';
-              }}
             />
           </div>
           <span className="font-heading text-gray-800 text-xl font-bold transition-colors duration-300 group-hover:text-primary md:text-2xl">
@@ -104,7 +91,6 @@ const Navigation = () => {
           </span>
         </a>
 
-        {/* Desktop Navigation */}
         <div className="hidden items-center gap-1 md:flex">
           {navLinks.map((link) => (
             <a
@@ -118,16 +104,12 @@ const Navigation = () => {
               }`}
             >
               <span className="relative z-10">{link.label}</span>
-              
-              {/* Hover Effect */}
               <motion.span
                 className="absolute inset-0 z-0 rounded-lg bg-primary/5"
                 initial={false}
                 whileHover={{ scale: 1 }}
                 transition={{ type: "spring", stiffness: 400, damping: 30 }}
               />
-              
-              {/* Active Indicator */}
               {activeSection === link.id && (
                 <motion.span
                   layoutId="activeIndicator"
@@ -155,7 +137,6 @@ const Navigation = () => {
           </a>
         </div>
 
-        {/* Mobile Menu Button */}
         <motion.button
           whileTap={{ scale: 0.9 }}
           className="relative z-50 rounded-lg bg-primary/10 p-2.5 text-primary transition-colors hover:bg-primary/20 md:hidden"
@@ -165,11 +146,9 @@ const Navigation = () => {
           {isOpen ? <X size={24} /> : <Menu size={24} />}
         </motion.button>
 
-        {/* Mobile Navigation Menu */}
         <AnimatePresence>
           {isOpen && (
             <>
-              {/* Backdrop */}
               <motion.div
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
@@ -179,7 +158,6 @@ const Navigation = () => {
                 onClick={() => setIsOpen(false)}
               />
               
-              {/* Menu Panel */}
               <motion.div
                 initial={{ x: "100%" }}
                 animate={{ x: 0 }}
@@ -188,18 +166,13 @@ const Navigation = () => {
                 className="fixed top-0 right-0 z-50 h-full w-72 bg-white shadow-2xl md:hidden"
               >
                 <div className="flex h-full flex-col">
-                  {/* Mobile Menu Header */}
                   <div className="border-b border-gray-100 p-6">
                     <div className="flex items-center gap-3">
                       <div className="h-10 w-10 overflow-hidden rounded-full">
                         <img 
-                          src="/api/placeholder/40/40" 
+                          src="https://placekitten.com/40/40" 
                           alt="Logo" 
                           className="h-full w-full object-cover"
-                          onError={(e) => {
-                            e.target.style.display = 'none';
-                            e.target.parentElement.innerHTML = '<svg class="w-10 h-10 text-primary" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 3c1.66 0 3 1.34 3 3s-1.34 3-3 3-3-1.34-3-3 1.34-3 3-3zm0 14.2c-2.5 0-4.71-1.28-6-3.22.03-1.99 4-3.08 6-3.08 1.99 0 5.97 1.09 6 3.08-1.29 1.94-3.5 3.22-6 3.22z"/></svg>';
-                          }}
                         />
                       </div>
                       <span className="font-heading text-gray-800 text-lg font-bold">
@@ -208,7 +181,6 @@ const Navigation = () => {
                     </div>
                   </div>
 
-                  {/* Mobile Menu Links */}
                   <div className="flex-1 overflow-y-auto p-4">
                     <div className="space-y-2">
                       {navLinks.map((link, idx) => (
@@ -234,7 +206,6 @@ const Navigation = () => {
                     </div>
                   </div>
 
-                  {/* Mobile Menu Footer */}
                   <div className="border-t border-gray-100 p-6">
                     <a href="/join" onClick={() => setIsOpen(false)}>
                       <motion.button
@@ -255,16 +226,13 @@ const Navigation = () => {
   );
 };
 
-export default Navigation;
-
-
+// Hero Component
 const Hero = () => {
   return (
     <section
       id="home"
       className="relative flex min-h-[90vh] flex-col items-center overflow-hidden px-6 py-12 md:flex-row md:px-12 lg:px-24"
     >
-      {/* Decorative Blobs */}
       <div className="bg-primary/10 absolute top-[-10%] left-[-10%] -z-10 h-[500px] w-[500px] rounded-full blur-3xl" />
       <div className="bg-accent/30 absolute right-[-5%] bottom-[10%] -z-10 h-[400px] w-[400px] rounded-full blur-3xl" />
 
@@ -302,7 +270,6 @@ const Hero = () => {
             what matters: peace, presence, and gentle purrs.
           </p>
 
-          {/* Trust Badges */}
           <motion.div
             className="flex flex-wrap gap-4 pt-4"
             initial={{ opacity: 0 }}
@@ -346,12 +313,11 @@ const Hero = () => {
           className="relative z-10"
         >
           <img
-            src="/images/cute_fluffy_cat_sleeping_on_a_cloud.png"
+            src="https://placekitten.com/600/600"
             alt="Sleeping zen cat on a cloud"
             className="h-auto w-full transform rounded-[3rem] shadow-2xl transition-transform duration-700 hover:rotate-0 md:rotate-3"
           />
 
-          {/* Floating Cards */}
           <motion.div
             animate={{ y: [0, -10, 0] }}
             transition={{ repeat: Infinity, duration: 4, ease: 'easeInOut' }}
@@ -366,7 +332,6 @@ const Hero = () => {
             </div>
           </motion.div>
 
-          {/* Second Badge */}
           <motion.div
             animate={{ y: [0, 10, 0] }}
             transition={{
@@ -391,6 +356,7 @@ const Hero = () => {
   );
 };
 
+// FeatureCard Component
 const FeatureCard = ({
   title,
   desc,
@@ -433,6 +399,7 @@ const FeatureCard = ({
   </motion.div>
 );
 
+// Features Component
 const Features = () => {
   return (
     <section
@@ -453,21 +420,21 @@ const Features = () => {
           <FeatureCard
             title="Master of Chill"
             desc="Learn the ancient art of doing absolutely nothing and looking fabulous while doing it."
-            img="/images/meditating_cat_illustration.png"
+            img="https://placekitten.com/300/200"
             delay={0.1}
             testId="card-feature-chill"
           />
           <FeatureCard
             title="Playful Spirit"
             desc="Rediscover your inner kitten. Chase dreams (and butterflies) with reckless abandon."
-            img="/images/playful_cat_illustration.png"
+            img="https://placekitten.com/301/200"
             delay={0.2}
             testId="card-feature-playful"
           />
           <FeatureCard
             title="Soul Nourishment"
             desc="Feed your heart with unconditional love, head bumps, and the occasional slow blink."
-            img="/images/cat_with_food_illustration.png"
+            img="https://placekitten.com/302/200"
             delay={0.3}
             testId="card-feature-nourishment"
           />
@@ -477,6 +444,7 @@ const Features = () => {
   );
 };
 
+// Community Component
 const Community = () => {
   const testimonials = [
     {
@@ -484,21 +452,21 @@ const Community = () => {
       role: 'Meditation Teacher',
       quote:
         'Purrfectly Zen completely transformed how I view mindfulness. My cat approves too.',
-      image: '/images/sarah_chen_meditation_teacher_portrait.png',
+      image: 'https://randomuser.me/api/portraits/women/44.jpg',
     },
     {
       name: 'Marcus Johnson',
       role: 'Wellness Coach',
       quote:
         'The cat philosophy here resonates deeply. Simplicity, presence, and the power of a good nap.',
-      image: '/images/marcus_johnson_wellness_coach_portrait.png',
+      image: 'https://randomuser.me/api/portraits/men/46.jpg',
     },
     {
       name: 'Elena Rodriguez',
       role: 'Creative Director',
       quote:
         "I've never felt more zen. The community here truly understands the meow of life.",
-      image: '/images/elena_rodriguez_creative_director_portrait.png',
+      image: 'https://randomuser.me/api/portraits/women/68.jpg',
     },
   ];
 
@@ -553,6 +521,7 @@ const Community = () => {
   );
 };
 
+// QuoteSection Component
 const QuoteSection = () => {
   return (
     <section
@@ -582,12 +551,12 @@ const QuoteSection = () => {
   );
 };
 
-export const Footer = () => {
+// Footer Component
+const Footer = () => {
   return (
     <footer className="from-secondary/5 via-background to-primary/5 border-border/40 relative border-t bg-gradient-to-br px-6 py-16">
       <div className="mx-auto max-w-7xl">
         <div className="grid grid-cols-1 gap-12 md:grid-cols-3 md:gap-8 lg:gap-12">
-          {/* Left Column: Brand */}
           <motion.div
             initial={{ opacity: 0, x: -20 }}
             whileInView={{ opacity: 1, x: 0 }}
@@ -607,7 +576,6 @@ export const Footer = () => {
             </p>
           </motion.div>
 
-          {/* Center Column: Links by Category */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -615,7 +583,6 @@ export const Footer = () => {
             transition={{ duration: 0.5, delay: 0.1 }}
             className="space-y-6"
           >
-            {/* Learn */}
             <div className="space-y-3">
               <div className="text-primary flex items-center gap-2">
                 <BookOpen className="h-5 w-5" />
@@ -639,7 +606,6 @@ export const Footer = () => {
               </div>
             </div>
 
-            {/* Community */}
             <div className="space-y-3">
               <div className="text-primary flex items-center gap-2">
                 <Users className="h-5 w-5" />
@@ -665,7 +631,6 @@ export const Footer = () => {
               </div>
             </div>
 
-            {/* Legal */}
             <div className="space-y-3">
               <div className="text-primary flex items-center gap-2">
                 <Lock className="h-5 w-5" />
@@ -683,7 +648,6 @@ export const Footer = () => {
             </div>
           </motion.div>
 
-          {/* Right Column: CTA */}
           <motion.div
             initial={{ opacity: 0, x: 20 }}
             whileInView={{ opacity: 1, x: 0 }}
@@ -713,10 +677,8 @@ export const Footer = () => {
           </motion.div>
         </div>
 
-        {/* Divider */}
         <div className="border-border/40 my-8 border-t" />
 
-        {/* Bottom: Copyright */}
         <motion.div
           initial={{ opacity: 0 }}
           whileInView={{ opacity: 1 }}
@@ -736,7 +698,8 @@ export const Footer = () => {
   );
 };
 
-export default function Home() {
+// Main Home Component
+const Home = () => {
   return (
     <div className="bg-background selection:bg-primary/20 selection:text-primary-foreground min-h-screen">
       <Navigation />
@@ -825,4 +788,6 @@ export default function Home() {
       <Footer />
     </div>
   );
-}
+};
+
+export default Home;
