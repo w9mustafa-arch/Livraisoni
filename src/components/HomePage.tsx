@@ -48,14 +48,16 @@ const Navigation = () => {
   return (
     <nav className="bg-[#FFFFFF] border-[#22282826] relative sticky top-0 z-50 flex w-full items-center justify-between border-b px-6 py-6 shadow-sm backdrop-blur-lg md:px-12">
       <a
-        href="/"
-        className="text-primary flex items-center gap-3 transition-opacity hover:opacity-80"
-      >
-        <PawPrint className="h-8 w-8" />
-        <span className="font-heading text-foreground text-2xl font-bold">
-          Purrfectly Zen
-        </span>
-      </a>
+  href="/"
+  className="transition-opacity hover:opacity-80"
+>
+  <img 
+    src="images/livraison-plus-marrakech.svg" 
+    alt="Livraison Plus - Livreur Marrakech et service de livraison rapide"
+    className="h-10 w-auto"
+  />
+</a>
+
 
       {/* Desktop Nav */}
       <div className="hidden items-center gap-8 font-medium md:flex">
