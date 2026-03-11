@@ -11,6 +11,8 @@ import {
   Star,
   Lock,
   CheckCircle,
+  Phone,
+  MessageCircle,
 } from 'lucide-react';
 import { useState, useEffect } from 'react';
 
@@ -178,134 +180,67 @@ const Hero = () => {
   return (
     <section
       id="home"
-      className="relative flex min-h-[90vh] flex-col items-center overflow-hidden px-6 py-12 md:flex-row md:px-12 lg:px-24"
+      className="relative flex min-h-[80vh] flex-col items-center justify-center overflow-hidden bg-white px-6 py-12 md:flex-row md:px-12 lg:px-24"
     >
-      {/* Decorative Blobs */}
-      <div className="bg-primary/10 absolute top-[-10%] left-[-10%] -z-10 h-[500px] w-[500px] rounded-full blur-3xl" />
-      <div className="bg-accent/30 absolute right-[-5%] bottom-[10%] -z-10 h-[400px] w-[400px] rounded-full blur-3xl" />
+      {/* الجانب الخاص بالصورة - يظهر أولاً في الهاتف */}
+      <div className="relative flex w-full justify-center md:w-1/2">
+        <motion.div
+          initial={{ opacity: 0, x: -30 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ duration: 0.8 }}
+          className="relative w-full max-w-[500px]"
+        >
+          <img
+            src="/images/hero-delivery-illustration.png" 
+            alt="Livraison Rapide Partout - Livraison Plus"
+            className="h-auto w-full object-contain"
+          />
+        </motion.div>
+      </div>
 
-      <div className="relative z-10 w-full space-y-8 md:w-1/2">
+      {/* الجانب الخاص بالنصوص والأزرار */}
+      <div className="mt-10 w-full text-center md:mt-0 md:w-1/2 md:text-left">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6 }}
+          transition={{ duration: 0.6, delay: 0.2 }}
+          className="space-y-6"
         >
-          <span className="font-hand text-primary mb-4 inline-block -rotate-2 text-2xl">
-            Welcome home, human!
-          </span>
-          <h1 className="font-heading text-foreground mb-6 text-5xl leading-[1.1] font-bold md:text-7xl">
-            Let's find your inner{' '}
-            <span className="text-primary relative inline-block">
-              Zen
-              <svg
-                className="text-accent absolute -bottom-1 left-0 -z-10 h-3 w-full"
-                viewBox="0 0 100 10"
-                preserveAspectRatio="none"
-              >
-                <path
-                  d="M0 5 Q 50 10 100 5"
-                  stroke="currentColor"
-                  strokeWidth="8"
-                  fill="none"
-                />
-              </svg>
-            </span>{' '}
-            <br />
-            with a cat!
+          <h1 className="text-slate-900 text-3xl font-bold leading-tight md:text-5xl lg:text-6xl">
+            Livreur Marrakech 24h/7 – <br className="hidden md:block" />
+            Repas, Courses et Médicaments livrés rapidement
           </h1>
-          <p className="text-muted-foreground max-w-md text-lg leading-relaxed md:text-xl">
-            The purrfect place to disconnect from the noise and reconnect with
-            what matters: peace, presence, and gentle purrs.
-          </p>
 
-          {/* Trust Badges */}
-          <motion.div
-            className="flex flex-wrap gap-4 pt-4"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 0.6, delay: 0.3 }}
-          >
-            {[
-              { icon: Star, label: '5 Rated', color: 'text-yellow-600' },
-              { icon: Lock, label: '100% Free', color: 'text-green-600' },
-              {
-                icon: CheckCircle,
-                label: 'Science-Backed',
-                color: 'text-purple-600',
-              },
-              { icon: Heart, label: 'Community Loved', color: 'text-red-600' },
-            ].map((badge, idx) => (
-              <motion.div
-                key={idx}
-                initial={{ opacity: 0, x: -10 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ delay: 0.4 + idx * 0.1 }}
-                className="bg-secondary/30 border-border/40 flex items-center justify-center gap-2 rounded-full border px-3 py-2"
-              >
-                <badge.icon
-                  className={`h-4 w-4 flex-shrink-0 ${badge.color}`}
-                />
-                <span className="text-foreground text-xs font-semibold">
-                  {badge.label}
-                </span>
-              </motion.div>
-            ))}
-          </motion.div>
-        </motion.div>
-      </div>
+          <div className="flex items-center justify-center gap-2 md:justify-start">
+            <span className="text-slate-600 font-medium">(61)</span>
+            <div className="flex text-yellow-400">
+              {[...Array(5)].map((_, i) => (
+                <Star key={i} size={20} fill="currentColor" />
+              ))}
+            </div>
+            <span className="text-slate-900 font-bold">4,8</span>
+          </div>
 
-      <div className="relative mt-12 w-full md:mt-0 md:w-1/2">
-        <motion.div
-          initial={{ opacity: 0, scale: 0.8, rotate: 5 }}
-          animate={{ opacity: 1, scale: 1, rotate: 0 }}
-          transition={{ duration: 0.8, ease: 'easeOut' }}
-          className="relative z-10"
-        >
-          <img
-            src="/images/cute_fluffy_cat_sleeping_on_a_cloud.png"
-            alt="Sleeping zen cat on a cloud"
-            className="h-auto w-full transform rounded-[3rem] shadow-2xl transition-transform duration-700 hover:rotate-0 md:rotate-3"
-          />
+          <div className="flex flex-col items-center gap-4 sm:flex-row md:justify-start">
+            <a 
+              href="tel:+212XXXXXX" 
+              className="flex w-full items-center justify-center gap-2 rounded-full bg-[#1A73E8] px-8 py-4 text-white transition-transform hover:scale-105 sm:w-auto"
+            >
+              <Phone size={20} fill="currentColor" />
+              <span className="font-bold">Appeler maintenant</span>
+            </a>
 
-          {/* Floating Cards */}
-          <motion.div
-            animate={{ y: [0, -10, 0] }}
-            transition={{ repeat: Infinity, duration: 4, ease: 'easeInOut' }}
-            className="bg-card absolute -bottom-8 -left-4 flex max-w-[200px] items-center gap-3 rounded-2xl p-4 shadow-lg md:left-10"
-          >
-            <div className="rounded-full bg-green-100 p-2 text-green-600">
-              <Sparkles size={20} />
-            </div>
-            <div>
-              <p className="text-sm font-bold">99% Stress Free!</p>
-              <p className="text-muted-foreground text-xs">Guaranteed purrs</p>
-            </div>
-          </motion.div>
-
-          {/* Second Badge */}
-          <motion.div
-            animate={{ y: [0, 10, 0] }}
-            transition={{
-              repeat: Infinity,
-              duration: 4,
-              ease: 'easeInOut',
-              delay: 0.5,
-            }}
-            className="bg-card absolute -top-4 -right-4 flex max-w-[200px] items-center gap-3 rounded-2xl p-4 shadow-lg md:-right-8"
-          >
-            <div className="rounded-full bg-blue-100 p-2 text-blue-600">
-              <Users size={20} />
-            </div>
-            <div>
-              <p className="text-sm font-bold">500K+ Members</p>
-              <p className="text-muted-foreground text-xs">Growing community</p>
-            </div>
-          </motion.div>
+            <a 
+              href="https://wa.me/212XXXXXX" 
+              className="flex w-full items-center justify-center gap-2 rounded-full bg-[#25D366] px-8 py-4 text-white transition-transform hover:scale-105 sm:w-auto"
+            >
+              <MessageCircle size={20} fill="currentColor" />
+              <span className="font-bold">WhatsApp</span>
+            </a>
+          </div>
         </motion.div>
       </div>
     </section>
-  );
-};
 
 const FeatureCard = ({
   title,
