@@ -221,23 +221,29 @@ const Navigation = () => {
           </div>
 
           {/* أزرار الاتصال الدائرية (الأزرق والأخضر) */}
-          <div className="flex flex-col sm:flex-row gap-4 w-full sm:w-auto">
+                    {/* أزرار العمل (CTA) - مطابقة للصورة 100% */}
+          <div className="flex flex-col sm:flex-row items-center gap-4 w-full sm:w-auto">
+            
+            {/* زر الاتصال - أزرق دائري */}
             <a 
               href="tel:+212" 
-              className="flex items-center justify-center gap-3 rounded-full bg-[#1A73E8] px-10 py-4 text-white shadow-md hover:bg-[#1557b0] transition-all"
+              className="flex items-center justify-center gap-2 rounded-full bg-[#1A73E8] px-8 py-4 text-white w-full sm:w-auto shadow-md transition-transform active:scale-95"
             >
-              <Phone size={20} fill="white" />
-              <span className="text-lg font-bold">Appeler maintenant</span>
+              <Phone size={22} fill="white" stroke="white" />
+              <span className="text-lg font-bold tracking-tight">Appeler maintenant</span>
             </a>
 
+            {/* زر واتساب - أخضر دائري */}
             <a 
               href="https://wa.me/212" 
-              className="flex items-center justify-center gap-3 rounded-full bg-[#25D366] px-10 py-4 text-white shadow-md hover:bg-[#1eb356] transition-all"
+              className="flex items-center justify-center gap-2 rounded-full bg-[#25D366] px-8 py-4 text-white w-full sm:w-auto shadow-md transition-transform active:scale-95"
             >
-              <MessageCircle size={22} fill="white" />
-              <span className="text-lg font-bold">WhatsApp</span>
+              <MessageCircle size={22} fill="white" stroke="white" />
+              <span className="text-lg font-bold tracking-tight">WhatsApp</span>
             </a>
+
           </div>
+
         </motion.div>
       </div>
     </section>
