@@ -189,8 +189,8 @@ const Navigation = () => {
           className="relative w-full max-w-[550px]"
         >
           <img
-            src="/images/hero-delivery-illustration.png" 
-            alt="LIVRAISON RAPIDE PARTOUT"
+            src="/images/service-de-livraison-rapide-a-marrakech.svg" 
+            alt="Service de livraison rapide de commandes à Marrakech disponible 24h/24"
             className="h-auto w-full object-contain"
           />
         </motion.div>
