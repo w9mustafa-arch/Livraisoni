@@ -241,6 +241,8 @@ const Hero = () => {
         </motion.div>
       </div>
     </section>
+      );
+};
 
 const FeatureCard = ({
   title,
