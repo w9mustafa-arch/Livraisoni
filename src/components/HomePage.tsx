@@ -96,12 +96,13 @@ const Navigation = () => {
 
       {/* Mobile Nav Toggle */}
       <button
-        className="text-foreground bg-primary/10 hover:bg-primary/25 rounded-full p-2 transition-colors md:hidden"
-        onClick={() => setIsOpen(!isOpen)}
-        data-testid="button-menu-toggle"
-      >
-        {isOpen ? <X /> : <Menu />}
-      </button>
+  className="text-foreground transition-colors md:hidden p-1.5"
+  onClick={() => setIsOpen(!isOpen)}
+  data-testid="button-menu-toggle"
+>
+  {isOpen ? <X size={24} /> : <Menu size={24} />}
+</button>
+
 
       {/* Mobile Nav Menu */}
       <AnimatePresence mode="wait">
