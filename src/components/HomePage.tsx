@@ -176,72 +176,72 @@ const Navigation = () => {
   );
 };
 
-const Hero = () => {
+
+              const Hero = () => {
   return (
-    <section
-      id="home"
-      className="relative flex min-h-[80vh] flex-col items-center justify-center overflow-hidden bg-white px-6 py-12 md:flex-row md:px-12 lg:px-24"
-    >
-      {/* الجانب الخاص بالصورة - يظهر أولاً في الهاتف */}
-      <div className="relative flex w-full justify-center md:w-1/2">
-        <motion.div
-          initial={{ opacity: 0, x: -30 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ duration: 0.8 }}
-          className="relative w-full max-w-[500px]"
+    <section id="home" className="relative flex flex-col items-center justify-center bg-white px-6 py-10 md:flex-row md:px-12 lg:px-24">
+      
+      {/* قسم الصورة (يظهر أولاً في الهاتف كما في الصورة 11012) */}
+      <div className="w-full md:w-1/2 flex justify-center order-1 md:order-1">
+        <motion.div 
+          initial={{ opacity: 0 }} 
+          animate={{ opacity: 1 }} 
+          className="relative w-full max-w-[550px]"
         >
           <img
             src="/images/hero-delivery-illustration.png" 
-            alt="Livraison Rapide Partout - Livraison Plus"
+            alt="LIVRAISON RAPIDE PARTOUT"
             className="h-auto w-full object-contain"
           />
         </motion.div>
       </div>
 
-      {/* الجانب الخاص بالنصوص والأزرار */}
-      <div className="mt-10 w-full text-center md:mt-0 md:w-1/2 md:text-left">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.2 }}
+      {/* قسم النصوص والأزرار (يظهر تحت الصورة في الهاتف وبجانبها في الحاسوب كما في الصور) */}
+      <div className="w-full md:w-1/2 mt-8 md:mt-0 order-2 md:order-2 flex flex-col items-center md:items-start text-center md:text-left">
+        <motion.div 
+          initial={{ opacity: 0, y: 20 }} 
+          animate={{ opacity: 1, y: 0 }} 
           className="space-y-6"
         >
-          <h1 className="text-slate-900 text-3xl font-bold leading-tight md:text-5xl lg:text-6xl">
-            Livreur Marrakech 24h/7 – <br className="hidden md:block" />
+          {/* العنوان بنفس تنسيق الخط واللون في الصورة */}
+          <h1 className="text-[#222828] text-[28px] md:text-[42px] lg:text-[48px] font-extrabold leading-[1.2]">
+            Livreur Marrakech 24h/7 – <br />
             Repas, Courses et Médicaments livrés rapidement
           </h1>
 
-          <div className="flex items-center justify-center gap-2 md:justify-start">
-            <span className="text-slate-600 font-medium">(61)</span>
-            <div className="flex text-yellow-400">
+          {/* التقييم بالنجوم (61) 4.8 */}
+          <div className="flex items-center gap-2">
+            <span className="text-gray-600 font-medium text-lg">(61)</span>
+            <div className="flex text-[#FFC107]">
               {[...Array(5)].map((_, i) => (
-                <Star key={i} size={20} fill="currentColor" />
+                <Star key={i} size={22} fill="currentColor" stroke="none" />
               ))}
             </div>
-            <span className="text-slate-900 font-bold">4,8</span>
+            <span className="text-gray-900 font-bold text-lg">4,8</span>
           </div>
 
-          <div className="flex flex-col items-center gap-4 sm:flex-row md:justify-start">
+          {/* أزرار الاتصال الدائرية (الأزرق والأخضر) */}
+          <div className="flex flex-col sm:flex-row gap-4 w-full sm:w-auto">
             <a 
-              href="tel:+212XXXXXX" 
-              className="flex w-full items-center justify-center gap-2 rounded-full bg-[#1A73E8] px-8 py-4 text-white transition-transform hover:scale-105 sm:w-auto"
+              href="tel:+212" 
+              className="flex items-center justify-center gap-3 rounded-full bg-[#1A73E8] px-10 py-4 text-white shadow-md hover:bg-[#1557b0] transition-all"
             >
-              <Phone size={20} fill="currentColor" />
-              <span className="font-bold">Appeler maintenant</span>
+              <Phone size={20} fill="white" />
+              <span className="text-lg font-bold">Appeler maintenant</span>
             </a>
 
             <a 
-              href="https://wa.me/212XXXXXX" 
-              className="flex w-full items-center justify-center gap-2 rounded-full bg-[#25D366] px-8 py-4 text-white transition-transform hover:scale-105 sm:w-auto"
+              href="https://wa.me/212" 
+              className="flex items-center justify-center gap-3 rounded-full bg-[#25D366] px-10 py-4 text-white shadow-md hover:bg-[#1eb356] transition-all"
             >
-              <MessageCircle size={20} fill="currentColor" />
-              <span className="font-bold">WhatsApp</span>
+              <MessageCircle size={22} fill="white" />
+              <span className="text-lg font-bold">WhatsApp</span>
             </a>
           </div>
         </motion.div>
       </div>
     </section>
-      );
+  );
 };
 
 const FeatureCard = ({
