@@ -46,7 +46,7 @@ const Navigation = () => {
   ];
 
   return (
-    <nav className="bg-[#FFFFFF] border-[#22282826] relative sticky top-0 z-50 flex w-full items-center justify-between border-b px-4 py-2 shadow-sm backdrop-blur-lg md:px-12 md:py-3">
+    <nav className="bg-[#FFFFFF] border-[#1A73E9] relative sticky top-0 z-50 flex w-full items-center justify-between border-b px-4 py-2 shadow-sm backdrop-blur-lg md:px-12 md:py-3">
     <a
   href="/"
   className="transition-opacity hover:opacity-80"
